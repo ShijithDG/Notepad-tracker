@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <title>Notepad Tracker - Shijith</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Notepad Tracker</h1>
+    <textarea id="note" rows="20" cols="100" placeholder="Write your notes here..."></textarea>
+    <input type="hidden" id="filename" value="note.txt">
+    <script>
+        let typingTimer; 
+        const doneTypingInterval = 2000; 
+
+        $('#note').on('keyup', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(saveNote, doneTypingInterval);
+        });
+
+        function saveNote() {
+            const content = $('#note').val();
+            const filename = $('#filename').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/save_note',
+                contentType: 'application/json',
+                data: JSON.stringify({ content: content, filename: filename }),
+                success: function(response) {
+                    console.log('Note saved:', response);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
